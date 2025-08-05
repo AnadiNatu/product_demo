@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management System - Live Demo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Styling */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* Logistics Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+        }
+
+        /* Navbar glass effect */
+        .glass-nav {
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Floating Icon animations */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .floating-icon {
+            position: absolute;
+            opacity: 0.07;
+            color: white;
+            animation: float 6s ease-in-out infinite;
+        }
+        .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .floating-icon:nth-child(3) { top: 60%; left: 5%; animation-delay: 2s; }
+        .floating-icon:nth-child(4) { top: 70%; right: 15%; animation-delay: 3s; }
+        .floating-icon:nth-child(5) { top: 40%; left: 80%; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(180deg); }
+        }
+
+        /* Main container */
+        .main-container {
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Glass card styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 1100px;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: slideUp 1s ease-out forwards;
+            margin-bottom: 20px;
+        }
+
+        .glass-card-full {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin: 20px;
+        }
+
+        .login-card {
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        /* Title Styling */
+        .main-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .glass-title {
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        /* Input Field */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border-radius: 10px;
+            padding: 12px 15px;
+        }
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.25) !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+            color: white !important;
+        }
+
+        /* Button styles */
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .glass-btn {
+            background: rgba(248, 249, 250, 0.1) !important;
+            backdrop-filter: blur(8px);
+            color: white !important;
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-decoration: none !important;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .glass-btn:hover {
+            background: rgba(248, 249, 250, 0.25) !important;
+            transform: translateY(-2px);
+            color: white !important;
+        }
+
+        .glass-btn.login {
+            background: rgba(40, 167, 69, 0.3) !important;
+        }
+        .glass-btn.signup {
+            background: rgba(23, 162, 184, 0.3) !important;
+        }
+        .glass-btn.btn-success {
+            background: rgba(40, 167, 69, 0.4) !important;
+        }
+        .glass-btn.btn-warning {
+            background: rgba(255, 193, 7, 0.4) !important;
+        }
+        .glass-btn.btn-danger {
+            background: rgba(220, 53, 69, 0.4) !important;
+        }
+        .glass-btn.btn-outline {
+            background: rgba(108, 117, 125, 0.3) !important;
+        }
+
+        /* Product cards */
+        .product-card {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: 0.3s;
+            height: 100%;
+        }
+        .product-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+        }
+
+        /* Table Styling */
+        .glass-table-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .glass-table {
+            width: 100%;
+            color: white;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .glass-table th {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        .glass-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-table tr:hover td {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Form Styling */
+        .form-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-select {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border-radius: 10px;
+        }
+
+        .form-select option {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+        }
+
+        /* Overlay Glass for modals/forms */
+        .overlay-glass {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Page transitions */
+        .page-content {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            .glass-card {
+                padding: 20px;
+            }
+            .button-container {
+                justify-content: center;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Links */
+        a {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        a:hover {
+            color: white;
+        }
+
+        /* Alert styling */
+        .glass-alert {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Hide/Show content */
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+
+        /* Demo Status Bar */
+        .demo-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Status -->
+    <div class="demo-status">
+        <i class="fas fa-play-circle"></i> Live Demo Mode
+    </div>
+
+    <!-- Floating Background Icons -->
+    <div class="bg-elements">
+        <i class="fas fa-box-open floating-icon" style="font-size: 60px;"></i>
+        <i class="fas fa-chart-line floating-icon" style="font-size: 50px;"></i>
+        <i class="fas fa-dolly-flatbed floating-icon" style="font-size: 55px;"></i>
+        <i class="fas fa-users floating-icon" style="font-size: 45px;"></i>
+        <i class="fas fa-warehouse floating-icon" style="font-size: 50px;"></i>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary glass-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" onclick="showSection('dashboard')">
+                <i class="fas fa-cubes"></i> Product Management System
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('dashboard')">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('create-product')">
+                            <i class="fas fa-plus-circle"></i> Create Product
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('products')">
+                            <i class="fas fa-boxes"></i> Products Table
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('create-order')">
+                            <i class="fas fa-shopping-cart"></i> Create Order
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('orders')">
+                            <i class="fas fa-list-alt"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('logs')">
+                            <i class="fas fa-history"></i> Logs
+                        </a>
+                    </li>
+                </ul>
+                <button class="btn btn-outline-light me-2" onclick="showSection('login')">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="btn btn-warning">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <div id="login" class="content-section">
+        <div class="bg-elements">
+            <i class="fas fa-user-lock floating-icon" style="font-size: 60px;"></i>
+            <i class="fas fa-shield-alt floating-icon" style="font-size: 50px;"></i>
+            <i class="fas fa-key floating-icon" style="font-size: 55px;"></i>
+            <i class="fas fa-fingerprint floating-icon" style="font-size: 45px;"></i>
+            <i class="fas fa-unlock-alt floating-icon" style="font-size: 50px;"></i>
+        </div>
+
+        <div class="main-container">
+            <div class="glass-card login-card page-content">
+                <h2 class="main-title">
+                    <i class="fas fa-user-shield"></i>
+                    Admin Login
+                </h2>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group mb-3 text-start">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" id="email" class="form-control glass-input" 
+                               value="admin@demo.com" required />
+                    </div>
+
+                    <div class="form-group mb-4 text-start">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" class="form-control glass-input" 
+                               value="admin123" required />
+                    </div>
+
+                    <button type="submit" class="glass-btn login w-100">🔐 Login</button>
+                </form>
+
+                <div class="mt-4 text-center links">
+                    <a href="#" class="me-2">Forgot Password?</a> |
+                    <a href="#" class="ms-2">Reset Password</a>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="glass-btn" onclick="showSection('dashboard')">
+                        ← Back to Home Page
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="content-section active">
+        <div class="main-container">
+            <div class="glass-card page-content">
+                <h2 class="main-title">
+                    <i class="fas fa-boxes"></i>
+                    Products Overview
+                </h2>
+
+                <!-- Search and Filters -->
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6 mb-3">
+                        <input type="text" class="form-control glass-input" 
+                               placeholder="Search product by name..." id="searchInput" />
+                    </div>
+                    <div class="col-md-6 button-container">
+                        <button class="glass-btn" onclick="filterProducts('price-asc')">Price ↑</button>
+                        <button class="glass-btn" onclick="filterProducts('price-desc')">Price ↓</button>
+                        <button class="glass-btn" onclick="filterProducts('top-ordered')">Top Ordered</button>
+                    </div>
+                </div>
+
+                <!-- Product Cards -->
+                <div class="row" id="productCards">
+                    <!-- Products will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Product Section -->
+    <div id="create-product" class="content-section">
+        <div class="main-container">
+            <div class="glass-card page-content">
+                <h2 class="main-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Create New Product
+                </h2>
+
+                <form onsubmit="createProduct(event)">
+                    <div class="mb-3">
+                        <input type="text" class="form-control glass-input" 
+                               placeholder="Product Name *" id="productName" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="number" class="form-control glass-input" 
+                               placeholder="Price (₹) *" id="productPrice" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="number" class="form-control glass-input" 
+                               placeholder="Inventory *" id="productInventory" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <textarea rows="3" class="form-control glass-input" 
+                                  placeholder="Description" id="productDesc"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="file" class="form-control glass-input" accept="image/*" 
+                               id="productImage" onchange="previewImage(event)" />
+                        <small class="form-text text-light">Supported formats: JPEG, PNG, GIF, WebP (Max: 5MB)</small>
+                        
+                        <div id="imagePreview" class="mt-3" style="display: none;">
+                            <img id="previewImg" width="200" style="border-radius: 10px;" />
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="submit" class="glass-btn login">
+                            <i class="fas fa-save"></i> Create Product
+                        </button>
+                        <button type="button" class="glass-btn signup" onclick="showSection('dashboard')">
+                            <i class="fas fa-times-circle"></i> Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Table Section -->
+    <div id="products" class="content-section">
+        <div class="glass-card-full page-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="glass-title">Product List</h2>
+                <button class="glass-btn" onclick="showSection('dashboard')">Back to Dashboard</button>
+            </div>
+
+            <div class="glass-table-container">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price (₹)</th>
+                            <th>Inventory</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Products will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Order Section -->
+    <div id="create-order" class="content-section">
+        <div class="overlay-glass" style="position: relative; background: transparent;">
+            <div class="glass-card page-content">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="glass-title">Create New Order</h3>
+                    <button class="glass-btn" onclick="showSection('dashboard')">Back to Dashboard</button>
+                </div>
+
+                <form onsubmit="createOrder(event)">
+                    <div class="mb-3">
+                        <label class="form-label">Product Name</label>
+                        <select class="form-select glass-input" id="orderProductName" required>
+                            <option value="">Select a product...</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Order Quantity</label>
+                        <input type="number" class="form-control glass-input" 
+                               id="orderQuantity" value="1" min="1" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Estimate Delivery Date</label>
+                        <input type="date" class="form-control glass-input" id="estimateDeliveryDate" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Delivery Date</label>
+                        <input type="date" class="form-control glass-input" id="deliveryDate" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Order Status</label>
+                        <select class="form-select glass-input" id="orderStatus" required>
+                            <option value="ORDERED">ORDERED</option>
+                            <option value="DISPATCHED">DISPATCHED</option>
+                            <option value="DELIVERED">DELIVERED</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-3">
+                        <button class="glass-btn btn-success" type="submit">Create Order</button>
+                        <button type="button" class="glass-btn btn-outline" onclick="showSection('dashboard')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Section -->
+    <div id="orders" class="content-section">
+        <div class="glass-card-full page-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="glass-title">Orders</h2>
+                <button class="glass-btn btn-outline" onclick="showSection('dashboard')">← Back to Dashboard</button>
+            </div>
+
+            <!-- Filter Section -->
+            <form class="row g-3 mb-4" onsubmit="filterOrders(event)">
+                <div class="col-md-4">
+                    <input class="form-control glass-input" id="filterProductName" 
+                           placeholder="Filter by Product Name">
+                </div>
+                <div class="col-md-4">
+                    <input type="number" class="form-control glass-input" id="filterUserId" 
+                           placeholder="Filter by User ID">
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button class="glass-btn btn-success" type="submit">Filter</button>
+                    <button class="glass-btn btn-outline" type="button" onclick="resetOrderFilters()">Reset</button>
+                </div>
+            </form>
+
+            <!-- Orders Table -->
+            <div class="glass-table-container">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>User</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Order Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Orders will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs Section -->
+    <div id="logs" class="content-section">
+        <div class="glass-card-full page-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="glass-title">📦 Order Logs by Product</h2>
+                <button class="glass-btn" onclick="showSection('dashboard')">← Dashboard</button>
+            </div>
+
+            <form class="row g-3 mb-4" onsubmit="fetchLogs(event)">
+                <div class="col-md-8">
+                    <input type="text" class="form-control glass-input" id="logsProductName"
+                           placeholder="🔍 Enter Product Name" required />
+                </div>
+                <div class="col-md-4">
+                    <button class="glass-btn btn-success" type="submit">Search</button>
+                </div>
+            </form>
+
+            <div id="logsResults" class="glass-table-container" style="display: none;">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>User</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Delivered On</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Logs will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="noLogsMessage" class="glass-alert" style="display: none;">
+                No logs found for the specified product.
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Demo Data
+        let products = [
+            {
+                productId: 1,
+                productName: "Wireless Mouse 2",
+                productDesc: "High-quality wireless mouse",
+                price: 2999,
+                productInventory: 25,
+                imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=300&fit=crop"
+            },
+            {
+                productId: 4,
+                productName: "Bluetooth Speaker",
+                productDesc: "Portable waterproof bluetooth speaker with premium sound",
+                price: 3499,
+                productInventory: 30,
+                imageUrl: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop"
+            },
+            {
+                productId: 5,
+                productName: "USB-C Hub",
+                productDesc: "Multi-port USB-C hub with HDMI, USB 3.0, and charging ports",
+                price: 2499,
+                productInventory: 50,
+                imageUrl: "https://images.unsplash.com/photo-1591462049264-8b312165fef7?w=300&h=300&fit=crop"
+            },
+            {
+                productId: 6,
+                productName: "Wireless Mouse",
+                productDesc: "Ergonomic wireless mouse with precision tracking",
+                price: 1299,
+                productInventory: 60,
+                imageUrl: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=300&h=300&fit=crop"
+            }
+        ];
+
+        let orders = [
+            {
+                orderId: 1001,
+                productName: "Wireless Mouse 2",
+                userName: "John Doe",
+                userId: 101,
+                orderQuantity: 2,
+                orderStatus: "DELIVERED",
+                orderDate: "2024-01-15T10:30:00Z",
+                estimateDeliveryDate: "2024-01-20",
+                deliveryDate: "2024-01-18"
+            },
+            {
+                orderId: 1002,
+                productName: "Smart Watch",
+                userName: "Jane Smith",
+                userId: 102,
+                orderQuantity: 1,
+                orderStatus: "DISPATCHED",
+                orderDate: "2024-01-16T14:20:00Z",
+                estimateDeliveryDate: "2024-01-22",
+                deliveryDate: "2024-01-21"
+            },
+            {
+                orderId: 1003,
+                productName: "Laptop Stand",
+                userName: "Mike Johnson",
+                userId: 103,
+                orderQuantity: 3,
+                orderStatus: "ORDERED",
+                orderDate: "2024-01-17T09:15:00Z",
+                estimateDeliveryDate: "2024-01-25",
+                deliveryDate: "2024-01-24"
+            },
+            {
+                orderId: 1004,
+                productName: "Bluetooth Speaker",
+                userName: "Sarah Wilson",
+                userId: 104,
+                orderQuantity: 1,
+                orderStatus: "DELIVERED",
+                orderDate: "2024-01-14T16:45:00Z",
+                estimateDeliveryDate: "2024-01-19",
+                deliveryDate: "2024-01-17"
+            },
+            {
+                orderId: 1005,
+                productName: "USB-C Hub",
+                userName: "David Brown",
+                userId: 105,
+                orderQuantity: 2,
+                orderStatus: "DISPATCHED",
+                orderDate: "2024-01-18T11:30:00Z",
+                estimateDeliveryDate: "2024-01-23",
+                deliveryDate: "2024-01-22"
+            }
+        ];
+
+        let orderLogs = [
+            {
+                orderId: 1001,
+                productName: "Wireless Mouse 2",
+                userName: "John Doe",
+                orderQuantity: 2,
+                orderStatus: "DELIVERED",
+                deliveredOn: "2024-01-18T15:30:00Z"
+            },
+            {
+                orderId: 1004,
+                productName: "Bluetooth Speaker",
+                userName: "Sarah Wilson",
+                orderQuantity: 1,
+                orderStatus: "DELIVERED",
+                deliveredOn: "2024-01-17T12:45:00Z"
+            },
+            {
+                orderId: 1006,
+                productName: "Wireless Headphones",
+                userName: "Alex Chen",
+                orderQuantity: 1,
+                orderStatus: "DELIVERED",
+                deliveredOn: "2024-01-16T14:20:00Z"
+            }
+        ];
+
+        // Current filtered data
+        let currentProducts = [...products];
+        let currentOrders = [...orders];
+
+        // Navigation Functions
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Load section-specific data
+            switch(sectionId) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'products':
+                    loadProductsTable();
+                    break;
+                case 'create-order':
+                    loadCreateOrderForm();
+                    break;
+                case 'orders':
+                    loadOrdersTable();
+                    break;
+            }
+        }
+
+        // Dashboard Functions
+        function loadDashboard() {
+            const container = document.getElementById('productCards');
+            container.innerHTML = '';
+            
+            currentProducts.forEach(product => {
+                const card = `
+                    <div class="col-md-4 mb-4">
+                        <div class="product-card h-100">
+                            <img src="${product.imageUrl}" alt="${product.productName}" 
+                                 style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                            <h4>${product.productName}</h4>
+                            <p>${product.productDesc}</p>
+                            <p><strong>Price:</strong> ₹${product.price.toLocaleString()}</p>
+                            <p><strong>In Stock:</strong> ${product.productInventory}</p>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function filterProducts(type) {
+            switch(type) {
+                case 'price-asc':
+                    currentProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    currentProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'top-ordered':
+                    // Simulate top ordered products
+                    currentProducts.sort((a, b) => b.productInventory - a.productInventory);
+                    break;
+            }
+            loadDashboard();
+        }
+
+        // Product Functions
+        function loadProductsTable() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '';
+            
+            products.forEach((product, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><img src="${product.imageUrl}" alt="${product.productName}" class="product-image"></td>
+                        <td>${product.productName}</td>
+                        <td>${product.productDesc}</td>
+                        <td>₹${product.price.toLocaleString()}</td>
+                        <td>${product.productInventory}</td>
+                        <td>
+                            <button class="glass-btn btn-warning me-2" onclick="updateProduct('${product.productName}')">Update</button>
+                            <button class="glass-btn btn-danger" onclick="deleteProduct('${product.productName}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function createProduct(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('productName').value;
+            const price = parseInt(document.getElementById('productPrice').value);
+            const inventory = parseInt(document.getElementById('productInventory').value);
+            const desc = document.getElementById('productDesc').value;
+            
+            const newProduct = {
+                productId: products.length + 1,
+                productName: name,
+                productDesc: desc,
+                price: price,
+                productInventory: inventory,
+                imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=300&fit=crop"
+            };
+            
+            products.push(newProduct);
+            currentProducts = [...products];
+            
+            // Show success message
+            alert('Product created successfully!');
+            
+            // Reset form
+            event.target.reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            
+            // Go back to dashboard
+            showSection('dashboard');
+        }
+
+        function updateProduct(productName) {
+            const product = products.find(p => p.productName === productName);
+            if (product) {
+                const newPrice = prompt(`Update price for ${productName} (Current: ₹${product.price}):`, product.price);
+                const newInventory = prompt(`Update inventory for ${productName} (Current: ${product.productInventory}):`, product.productInventory);
+                
+                if (newPrice !== null && newInventory !== null) {
+                    product.price = parseInt(newPrice) || product.price;
+                    product.productInventory = parseInt(newInventory) || product.productInventory;
+                    loadProductsTable();
+                    alert('Product updated successfully!');
+                }
+            }
+        }
+
+        function deleteProduct(productName) {
+            if (confirm(`Are you sure you want to delete "${productName}"?`)) {
+                const index = products.findIndex(p => p.productName === productName);
+                if (index > -1) {
+                    products.splice(index, 1);
+                    currentProducts = [...products];
+                    loadProductsTable();
+                    alert('Product deleted successfully!');
+                }
+            }
+        }
+
+        // Order Functions
+        function loadCreateOrderForm() {
+            const select = document.getElementById('orderProductName');
+            select.innerHTML = '<option value="">Select a product...</option>';
+            
+            products.forEach(product => {
+                select.innerHTML += `<option value="${product.productName}">${product.productName}</option>`;
+            });
+            
+            // Set default dates
+            const today = new Date();
+            const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('estimateDeliveryDate').value = nextWeek.toISOString().split('T')[0];
+            document.getElementById('deliveryDate').value = nextWeek.toISOString().split('T')[0];
+        }
+
+        function createOrder(event) {
+            event.preventDefault();
+            
+            const productName = document.getElementById('orderProductName').value;
+            const quantity = parseInt(document.getElementById('orderQuantity').value);
+            const estimateDate = document.getElementById('estimateDeliveryDate').value;
+            const deliveryDate = document.getElementById('deliveryDate').value;
+            const status = document.getElementById('orderStatus').value;
+            
+            const newOrder = {
+                orderId: orders.length + 1001,
+                productName: productName,
+                userName: "Demo User",
+                userId: 999,
+                orderQuantity: quantity,
+                orderStatus: status,
+                orderDate: new Date().toISOString(),
+                estimateDeliveryDate: estimateDate,
+                deliveryDate: deliveryDate
+            };
+            
+            orders.push(newOrder);
+            currentOrders = [...orders];
+            
+            alert('Order created successfully!');
+            event.target.reset();
+            showSection('dashboard');
+        }
+
+        function loadOrdersTable() {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+            
+            if (currentOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-muted">No orders found.</td></tr>';
+                return;
+            }
+            
+            currentOrders.forEach(order => {
+                const row = `
+                    <tr>
+                        <td>${order.orderId}</td>
+                        <td>${order.productName}</td>
+                        <td>${order.userName}</td>
+                        <td>${order.orderQuantity}</td>
+                        <td><span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span></td>
+                        <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+                        <td>
+                            <button class="glass-btn btn-warning me-2" onclick="updateOrder(${order.orderId})">Update</button>
+                            <button class="glass-btn btn-danger" onclick="deleteOrder(${order.userId}, '${order.productName}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'ORDERED': return 'primary';
+                case 'DISPATCHED': return 'warning';
+                case 'DELIVERED': return 'success';
+                default: return 'secondary';
+            }
+        }
+
+        function filterOrders(event) {
+            event.preventDefault();
+            
+            const productName = document.getElementById('filterProductName').value.toLowerCase();
+            const userId = document.getElementById('filterUserId').value;
+            
+            currentOrders = orders.filter(order => {
+                const matchesProduct = !productName || order.productName.toLowerCase().includes(productName);
+                const matchesUser = !userId || order.userId.toString().includes(userId);
+                return matchesProduct && matchesUser;
+            });
+            
+            loadOrdersTable();
+        }
+
+        function resetOrderFilters() {
+            document.getElementById('filterProductName').value = '';
+            document.getElementById('filterUserId').value = '';
+            currentOrders = [...orders];
+            loadOrdersTable();
+        }
+
+        function updateOrder(orderId) {
+            const order = orders.find(o => o.orderId === orderId);
+            if (order) {
+                const newStatus = prompt(`Update status for Order #${orderId}:`, order.orderStatus);
+                if (newStatus && ['ORDERED', 'DISPATCHED', 'DELIVERED'].includes(newStatus.toUpperCase())) {
+                    order.orderStatus = newStatus.toUpperCase();
+                    loadOrdersTable();
+                    alert('Order updated successfully!');
+                }
+            }
+        }
+
+        function deleteOrder(userId, productName) {
+            if (confirm(`Are you sure to delete order for "${productName}" by user #${userId}?`)) {
+                const index = orders.findIndex(o => o.userId === userId && o.productName === productName);
+                if (index > -1) {
+                    orders.splice(index, 1);
+                    currentOrders = [...orders];
+                    loadOrdersTable();
+                    alert('Order deleted successfully!');
+                }
+            }
+        }
+
+        // Logs Functions
+        function fetchLogs(event) {
+            event.preventDefault();
+            
+            const productName = document.getElementById('logsProductName').value.toLowerCase();
+            const filteredLogs = orderLogs.filter(log => 
+                log.productName.toLowerCase().includes(productName)
+            );
+            
+            const resultsDiv = document.getElementById('logsResults');
+            const noLogsDiv = document.getElementById('noLogsMessage');
+            const tbody = document.getElementById('logsTableBody');
+            
+            if (filteredLogs.length > 0) {
+                tbody.innerHTML = '';
+                filteredLogs.forEach(log => {
+                    const row = `
+                        <tr>
+                            <td>${log.orderId}</td>
+                            <td>${log.productName}</td>
+                            <td>${log.userName}</td>
+                            <td>${log.orderQuantity}</td>
+                            <td><span class="badge bg-success">${log.orderStatus}</span></td>
+                            <td>${new Date(log.deliveredOn).toLocaleDateString()}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+                resultsDiv.style.display = 'block';
+                noLogsDiv.style.display = 'none';
+            } else {
+                resultsDiv.style.display = 'none';
+                noLogsDiv.style.display = 'block';
+                noLogsDiv.innerHTML = `No logs found for product "${document.getElementById('logsProductName').value}".`;
+            }
+        }
+
+        // Login Function
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simulate login validation
+            if (email === 'admin@demo.com' && password === 'admin123') {
+                alert('Login successful! Welcome to the admin dashboard.');
+                showSection('dashboard');
+            } else {
+                alert('Invalid credentials. Please use admin@demo.com / admin123');
+            }
+        }
+
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase();
+                    if (query) {
+                        currentProducts = products.filter(product => 
+                            product.productName.toLowerCase().includes(query) ||
+                            product.productDesc.toLowerCase().includes(query)
+                        );
+                    } else {
+                        currentProducts = [...products];
+                    }
+                    loadDashboard();
+                });
+            }
+            
+            // Load initial dashboard
+            loadDashboard();
+        });
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click animations to buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('glass-btn')) {
+                    e.target.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        e.target.style.transform = '';
+                    }, 150);
+                }
+            });
+            
+            // Add hover effects to product cards
+            document.addEventListener('mouseover', function(e) {
+                if (e.target.closest('.product-card')) {
+                    e.target.closest('.product-card').style.transform = 'translateY(-5px)';
+                }
+            });
+            
+            document.addEventListener('mouseout', function(e) {
+                if (e.target.closest('.product-card')) {
+                    e.target.closest('.product-card').style.transform = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
